@@ -56,4 +56,32 @@ public class WeChatTest {
         RobotUtils.pressKey(500, false,KeyEvent.VK_CONTROL,KeyEvent.VK_V);
         RobotUtils.pressKey(500, true,KeyEvent.VK_ENTER);
     }
+    @Test
+    public void test4() throws IOException {
+        JsonObject responseJsonObject = OkHttpUtils.sendRequest("https://www.apiopen.top/journalismApi").getAsJsonObject();
+        JsonObject dataJsonObject = responseJsonObject.get("data").getAsJsonObject();
+        JsonArray moneyJsonArray = dataJsonObject.get("money").getAsJsonArray();
+        JsonArray simpleMoneyJsonArray = GsonUtils.generateJsonElementWithNeededField(moneyJsonArray, "title","link").getAsJsonArray();
+        System.out.println(simpleMoneyJsonArray);
+        StringBuilder stringBuilder = new StringBuilder("每日财经新闻：");
+        stringBuilder.append("\r\n");
+        int i = 1;
+        for(JsonElement jsonElement : simpleMoneyJsonArray){
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            stringBuilder.append(i);
+            stringBuilder.append(".");
+            stringBuilder.append(jsonObject.get("title").getAsString());
+            stringBuilder.append("\r\n");
+            String contentString = jsonObject.get("link").getAsString();
+            stringBuilder.append(contentString);
+            stringBuilder.append("\r\n");
+            i++;
+        }
+        String threeJokeString = stringBuilder.toString();
+        System.out.println(threeJokeString);
+        ClipboardUtils.setClipboardText(threeJokeString);
+        RobotUtils.clickMouse(500,500, 2277, 284);
+        RobotUtils.pressKey(500, false,KeyEvent.VK_CONTROL,KeyEvent.VK_V);
+        RobotUtils.pressKey(500, true,KeyEvent.VK_ENTER);
+    }
 }
