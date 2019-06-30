@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 public class UnsafeTest {
     @Test
     public void test1() throws NoSuchFieldException, IllegalAccessException {
-        Field field = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+        Field field = Unsafe.class.getDeclaredField("theUnsafe");
         field.setAccessible(true);
         Unsafe unsafe = (Unsafe) field.get(null);
         System.out.println("memory: " + unsafe.getByte(0x1b126c));

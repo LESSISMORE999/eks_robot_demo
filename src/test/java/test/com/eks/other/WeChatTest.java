@@ -1,9 +1,7 @@
 package test.com.eks.other;
 
-import com.eks.utils.ClipboardUtils;
-import com.eks.utils.GsonUtils;
-import com.eks.utils.OkHttpUtils;
-import com.eks.utils.RobotUtils;
+import com.eks.enumeration.FileTypeEnum;
+import com.eks.utils.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,7 +9,9 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class WeChatTest {
     @Test
@@ -83,5 +83,69 @@ public class WeChatTest {
         RobotUtils.clickMouse(500,500, 2277, 284);
         RobotUtils.pressKey(500, false,KeyEvent.VK_CONTROL,KeyEvent.VK_V);
         RobotUtils.pressKey(500, true,KeyEvent.VK_ENTER);
+    }
+    @Test
+    public void test5() throws IOException {
+        String dirPathString = "D:\\TEMP\\input";
+        List<String> filePathStringList = FileUtils.getAllFilePathBaseDir(dirPathString);
+        for(String filePathString : filePathStringList){
+            if (filePathString.endsWith(".dat")){
+                String filePathWithoutDirPathString = filePathString.substring(dirPathString.length(), filePathString.length());
+
+                String fileHexString = FileUtils.fileToHexString(filePathString);
+                String firstHexString = fileHexString.substring(0, 2);
+                Integer firstHexStringInteger = FileUtils.hexStringToInteger(firstHexString);
+
+                FileTypeEnum[] fileTypeEnumArray = FileTypeEnum.values();
+                Boolean successBoolean = false;
+                for(FileTypeEnum fileTypeEnum : fileTypeEnumArray){
+                    String fileTypeEnumStartHexString = fileTypeEnum.getStartHexString();
+                    String fileTypeEnumStartHexStringSubstring = fileTypeEnumStartHexString.substring(0, 2);
+                    Integer integer2 = FileUtils.hexStringToInteger(fileTypeEnumStartHexStringSubstring);
+                    int xorInteger = firstHexStringInteger ^ integer2;
+
+                    String secondHexString = fileHexString.substring(2, 4);
+                    Integer secondHexStringInteger = FileUtils.hexStringToInteger(secondHexString);
+                    int secondXorInt = secondHexStringInteger ^xorInteger;
+                    String secondXorString = FileUtils.integerToHexString(secondXorInt);
+
+                    String secondFileTypeEnumString = fileTypeEnumStartHexString.substring(2, 4).toLowerCase();
+                    if (!secondFileTypeEnumString.equals(secondXorString.toLowerCase())){
+                        continue;
+                    }
+
+                    String newFilePathWithoutDirPathString = filePathWithoutDirPathString.replaceAll(".dat", "." + fileTypeEnum.name());
+                    String outputFilePathString = "D:/TEMP/output/success" + File.separator + newFilePathWithoutDirPathString;
+                    FileUtils.decryptFile(filePathString,outputFilePathString,xorInteger);
+                    Boolean judgeImageBoolean = ImageUtils.judgeImage(outputFilePathString);
+                    if (!judgeImageBoolean){
+                        boolean deleteFileBoolean = FileUtils.deleteFile(outputFilePathString);
+                        if (!deleteFileBoolean){
+                            throw new RuntimeException("Failed to delete file.");
+                        }
+                        continue;
+                    }
+                    successBoolean = true;
+                    break;
+                }
+                if (!successBoolean){
+                    String outputFilePathString = "D:/TEMP/output/fail"+ File.separator + filePathWithoutDirPathString;
+                    FileUtils.copyFile(filePathString,outputFilePathString);
+                }
+            }
+        }
+    }
+    @Test
+    public void test6(){
+        String uniString = WeChatUtils.getUniString("D:\\Study_Classification\\Hook\\EKS_Files\\LouYue_20190629_2013\\com_tencent_mm_db_output\\data\\data\\com.tencent.mm\\MicroMsg\\systemInfo.cfg");
+        String imeiString = WeChatUtils.getImeiString("D:\\Study_Classification\\Hook\\EKS_Files\\LouYue_20190629_2013\\com_tencent_mm_db_output\\data\\data\\com.tencent.mm\\MicroMsg\\CompatibleInfo.cfg");
+        String weChatKeyString = WeChatUtils.getWeChatKeyString(imeiString, uniString);
+        System.out.println("uniString:" + uniString);
+        System.out.println("imeiString:" + imeiString);
+        System.out.println("weChatKeyString:" + weChatKeyString);
+    }
+    @Test
+    public void test7(){
+
     }
 }

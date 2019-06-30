@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-    private static void closeStream(InputStream inputStream){
+    public static void closeStream(InputStream inputStream){
         if (inputStream != null) {
             try {
                 inputStream.close();
@@ -16,7 +16,7 @@ public class FileUtils {
             }
         }
     }
-    private static void closeStream(OutputStream outputStream){
+    public static void closeStream(OutputStream outputStream){
         if (outputStream != null) {
             try {
                 outputStream.close();
