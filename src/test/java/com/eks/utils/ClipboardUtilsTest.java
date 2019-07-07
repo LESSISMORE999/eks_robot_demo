@@ -1,6 +1,5 @@
-package test.com.eks.utils;
+package com.eks.utils;
 
-import com.eks.utils.ClipboardUtils;
 import org.junit.Test;
 
 import java.awt.datatransfer.UnsupportedFlavorException;

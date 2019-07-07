@@ -1,6 +1,5 @@
-package test.com.eks.utils;
+package com.eks.utils;
 
-import com.eks.utils.FileUtils;
 import org.junit.Test;
 
 import java.io.IOException;

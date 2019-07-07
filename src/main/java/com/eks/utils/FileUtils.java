@@ -7,19 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-    public static void closeStream(InputStream inputStream){
-        if (inputStream != null) {
+    public static void closeStream(Closeable closeable){
+        if (closeable != null) {
             try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    public static void closeStream(OutputStream outputStream){
-        if (outputStream != null) {
-            try {
-                outputStream.close();
+                closeable.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

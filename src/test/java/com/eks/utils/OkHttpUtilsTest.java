@@ -1,7 +1,5 @@
-package test.com.eks.utils;
+package com.eks.utils;
 
-import com.eks.utils.GsonUtils;
-import com.eks.utils.OkHttpUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

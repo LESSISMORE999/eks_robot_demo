@@ -1,4 +1,4 @@
-package test.com.eks.other;
+package com.eks.other;
 
 import com.eks.enumeration.FileTypeEnum;
 import com.eks.utils.*;
