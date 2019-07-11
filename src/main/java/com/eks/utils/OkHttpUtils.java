@@ -1,10 +1,8 @@
 package com.eks.utils;
 
 import com.google.gson.JsonElement;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import com.google.gson.JsonObject;
+import okhttp3.*;
 
 import java.io.IOException;
 
@@ -22,5 +20,22 @@ public class OkHttpUtils {
         }
         String responseBodyString = responseBody.string();
         return GsonUtils.convertStringToJsonElement(responseBodyString);
+    }
+    public static JsonObject sendTuLingRobotRequest(JsonObject requestJsonObject) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, requestJsonObject.toString());
+        Request request = new Request.Builder()
+                .url("http://openapi.tuling123.com/openapi/api/v2")
+                .post(body)
+                .addHeader("content-type", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+        ResponseBody responseBody = response.body();
+        if(responseBody == null){
+            throw new RuntimeException("Response is empty.");
+        }
+        String responseBodyString = responseBody.string();
+        return GsonUtils.convertStringToJsonElement(responseBodyString).getAsJsonObject();
     }
 }
